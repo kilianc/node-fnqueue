@@ -28,43 +28,47 @@ The global callback is called on the first error, or at the end of all functions
 
 FnQueue magically resolves all dependencies and executes functions in the right order with the provided concurrency level.
 
-    var FnQueue = require('node-fnqueue');
+```javascript
+var FnQueue = require('node-fnqueue');
+```
 or for a verbose mode:
 
-    var FnQueue = require('node-fnqueue').verbose();
-
+```javascript
+var FnQueue = require('node-fnqueue').verbose();
+```
 Example:
 
-    new FnQueue({
-        funnyStuff: ['processSomething', 'searchSomething', function(time, searchResults, callback){
-            // do something silly
-            callback(null, 'ciao!');
-        }],
-        searchSomething: function(callback){
-            // do something with database
-            callback(err, results);
-        },
-        update: ['searchSomething', function(searchResults, callback){
-            // change values inside results and save to db
-            callback(err); // no needs to return values
-        }],
-        processSomething: ['searchSomething', function(searchResults, callback){
-            var start = new Date().getTime();
-            // write a file log
-            var elapsedTime = new Date().getTime() - start;
-            callback(err, elapsedTime); // logs write time;
-        }]
-    },function(err, data){
+```javascript
+new FnQueue({
+    funnyStuff: ['processSomething', 'searchSomething', function(time, searchResults, callback){
+        // do something silly
+        callback(null, 'ciao!');
+    }],
+    searchSomething: function(callback){
+        // do something with database
+        callback(err, results);
+    },
+    update: ['searchSomething', function(searchResults, callback){
+        // change values inside results and save to db
+        callback(err); // no needs to return values
+    }],
+    processSomething: ['searchSomething', function(searchResults, callback){
+        var start = new Date().getTime();
+        // write a file log
+        var elapsedTime = new Date().getTime() - start;
+        callback(err, elapsedTime); // logs write time;
+    }]
+},function(err, data){
 
-        if(err)
-            throw err;
+    if(err)
+        throw err;
 
-        console.log(data.searchSomething);  // results
-        console.log(data.update);           // undefined
-        console.log(data.processSomething); // elapsedTime
-        console.log(data.funnyStuff);       // 'ciao!'
-    }, 1);
-
+    console.log(data.searchSomething);  // results
+    console.log(data.update);           // undefined
+    console.log(data.processSomething); // elapsedTime
+    console.log(data.funnyStuff);       // 'ciao!'
+}, 1);
+```
 ## License
 
 _This software is released under the MIT license cited below_.
