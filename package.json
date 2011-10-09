@@ -1,0 +1,4 @@
+{
+  "name" : "fnqueue",
+  "main" : "./lib/fnqueue.js"
+}
