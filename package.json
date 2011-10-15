@@ -1,4 +1,13 @@
 {
-  "name" : "fnqueue",
-  "main" : "./lib/fnqueue.js"
+	"name": "fnqueue",
+	"main" : "./lib/fnqueue.js",
+	"description": "A powerful utility for function chaining",
+	"version": "1.0.2",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/kilianc/node-fnqueue.git"
+	},
+	"author": [
+		"Kilian Ciuffolo <me@nailik.org> (http://nailik.org)"
+	]
 }
