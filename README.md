@@ -6,9 +6,13 @@ A powerful utility for function chaining (inspired by [async](https://github.com
 
 - nodejs v0.4.12+
 
-## Installation and first run
+## Installation as submodule
 
     $ git clone git://github.com/kilian/node-fnqueue.git
+
+## Installation with npm
+
+    $ npm install fnqueue
 
 ## Usage
 
