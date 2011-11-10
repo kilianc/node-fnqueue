@@ -33,12 +33,12 @@ The global callback is called on the first error, or at the end of all functions
 FnQueue magically resolves all dependencies and executes functions in the right order with the provided concurrency level.
 
 ```javascript
-var FnQueue = require('node-fnqueue');
+var FnQueue = require('fnqueue');
 ```
 or for a verbose mode:
 
 ```javascript
-var FnQueue = require('node-fnqueue').verbose();
+var FnQueue = require('fnqueue').verbose();
 ```
 Example:
 
