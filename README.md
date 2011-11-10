@@ -2,9 +2,9 @@
 
 A powerful utility for function chaining (inspired by [async](https://github.com/caolan/async)).
 
-## Dependencies
+## Engine
 
-- nodejs v0.4.12+
+- nodejs v0.4.12+ (tested with v0.6.x)
 
 ## Installation as submodule
 
@@ -16,17 +16,21 @@ A powerful utility for function chaining (inspired by [async](https://github.com
 
 ## Usage
 
+```javascript
+new FnQueue(Object[, Function, Number]);
+```
+
 Parameters:
 
 - Object of functions
 - Global callback
 - Concurrency level (default is max possible)
 
-Each field of first parameter (Functions object) must be an Array / Function.
+Each field of the first parameter (Functions object) must be an Array / Function.
 
-If you pass an Array you are declaring a needed dependency with another function, otherwise you are passing a Function, then you are declaring a dependency less step.
+if you pass an Array, you are declaring a required dependency with another function, otherwise you are passing a Function, then declaring a step in the chain with no dependencies.
 
-Each function with a dependency is called with the result of the depended function as parameter.
+Each function with a dependency is called with the result of the dependent function as parameter.
 
 The global callback is called on the first error, or at the end of all functions. The first parameter is the err (if provided) and the second one is a data object with the result of the chain.
 
@@ -73,6 +77,15 @@ new FnQueue({
     console.log(data.funnyStuff);       // 'ciao!'
 }, 1);
 ```
+## Test
+
+Tests depends on http://vowsjs.org/ then
+
+    npm install -g vows
+    npm test
+
+![tests](http://f.cl.ly/items/2j1h2i0Q3v0B100d1S20/fnqueue_test.png)
+
 ## License
 
 _This software is released under the MIT license cited below_.
