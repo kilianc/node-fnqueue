@@ -3,7 +3,7 @@
 	"name": "fnqueue",
 	"main" : "./lib/fnqueue.js",
 	"description": "A powerful utility for function chaining",
-	"version": "1.0.5",
+	"version": "2.0.0",
 	"engines": {
 		"node": ">= v0.4.7"
 	},
