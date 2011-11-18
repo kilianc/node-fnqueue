@@ -6,33 +6,29 @@ A powerful utility for function chaining (inspired by [async](https://github.com
 
 - nodejs v0.4.12+ (tested with v0.6.x)
 
-## Installation as submodule
-
-    $ git clone git://github.com/kilian/node-fnqueue.git
-
 ## Installation with npm
 
     $ npm install fnqueue
 
-## Usage
+## Syntax
 
 ```javascript
-new FnQueue(Object[, Function, Number]);
+new FnQueue(functionsList[, callback, concurrencyLevel]);
 ```
+##Parameters
 
-Parameters:
+1. `functionsList` __(Object)__ a list of Functions. Each function can declare implicit dependencies as arguments and assume you provide a single callback as the last argument.
+2. `callback` __(Function(err, data))__ the complete callback in the conventional form of `function (err, data){ ... }`
+3. `concurrencyLevel` __(Number/String: defaults to 'auto')__ the concurrency level of the chain execution, can be `'auto'` or `N* = { 1, 2, ... }`
 
-- Object of functions
-- Global callback
-- Concurrency level (default is max possible)
+##Notes
 
-Each field of the first parameter (Functions object) must be an Array / Function.
+FnQueue runs a list of functions, each passing their results to the dependent function in the list. However, if any of the functions pass an error to the callback, the next function is not executed and the main callback is immediately called with the error.
 
-if you pass an Array, you are declaring a required dependency with another function, otherwise you are passing a Function, then declaring a step in the chain with no dependencies.
+Each dependency/argument must be named with the label of the dependent function in the `functionsList` (the first constructor argument).
+Each function with a dependency will be called with the result of the dependent function as expected. __(YES this is a fucking cool introspection!)__
 
-Each function with a dependency is called with the result of the dependent function as parameter.
-
-The global callback is called on the first error, or at the end of all functions. The first parameter is the err (if provided) and the second one is a data object with the result of the chain.
+The global callback is called once, on the first error or at the end of the execution. A data object will be provided with the indexed result of the functions.
 
 FnQueue magically resolves all dependencies and executes functions in the right order with the provided concurrency level.
 
@@ -48,23 +44,27 @@ Example:
 
 ```javascript
 new FnQueue({
-    funnyStuff: ['processSomething', 'searchSomething', function(time, searchResults, callback){
+    // this will wait for 'processSomething' and 'searchSomething' and will be called with the respective results
+    funnyStuff: function(processSomething, searchSomething, callback){
         // do something silly
         callback(null, 'ciao!');
-    }],
+    },
+    // this will be called instantly
     searchSomething: function(callback){
         // do something with database
         callback(err, results);
     },
-    update: ['searchSomething', function(searchResults, callback){
+    // this will wait 'searchSomething'
+    update: function(searchSomething, callback){
         // change values inside results and save to db
         callback(err); // no needs to return values
-    }],
-    processSomething: ['searchSomething', function(searchResults, callback){
+    },
+    // this will wait 'searchSomething'
+    processSomething: function(searchSomething, callback){
         var start = new Date().getTime();
-        // write a file log
+        // do something slow
         var elapsedTime = new Date().getTime() - start;
-        callback(err, elapsedTime); // logs write time;
+        callback(err, elapsedTime);
     }]
 },function(err, data){
 
@@ -82,9 +82,10 @@ new FnQueue({
 Tests depends on http://vowsjs.org/ then
 
     npm install -g vows
+    npm install
     npm test
 
-![tests](http://f.cl.ly/items/2j1h2i0Q3v0B100d1S20/fnqueue_test.png)
+![tests](http://cl.ly/1R2q3h0G2c3a41303R1I/fnqueue_test_v2.png)
 
 ## License
 
