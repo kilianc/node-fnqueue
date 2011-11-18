@@ -2,7 +2,6 @@ var
 	vows = require('vows'),
 	assert = require('assert'),
 	FnQueue = require('../lib/fnqueue');
-	// macros = require('../macros');
 
 function returnsArguments(askedResults, exptectedResults) {
 	return function (results) {
@@ -18,7 +17,7 @@ vows.describe('FnQueue').addBatch({
 		}
 	}
 }).addBatch({
-	'FnQueue.getArguments should success': {
+	'FnQueue.getFunctionArguments should success': {
 		'without spaces': function () {
 			assert.deepEqual(FnQueue.prototype.getFunctionArguments(function (foo,bar,callback) {}), ['foo', 'bar', 'callback']);
 		},
