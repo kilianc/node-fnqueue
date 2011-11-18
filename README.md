@@ -18,7 +18,7 @@ new FnQueue(functionsList[, callback, concurrencyLevel, isStopped]);
 ##Parameters
 
 1. `functionsList` __(Object)__ a list of Functions. Each function can declare implicit dependencies as arguments and assume you provide a single callback as the last argument.
-2. `callback` __(Function(err, data))__ the complete callback in the conventional form of `function (err, data){ ... }`
+2. `callback` __(Function(err, data))__ the complete callback in the conventional form of `function (err, data) { ... }`
 3. `concurrencyLevel` __(Number/String: defaults to 'auto')__ the concurrency level of the chain execution, can be `'auto'` or `N* = { 1, 2, ... }`
 4. `isStopped` __(Boolean: defaults to false)__ if true you must call the start method in order to execute the function list.
 
@@ -55,43 +55,44 @@ Example:
 
 ```javascript
 new FnQueue({
-    // this will wait for 'processSomething' and 'searchSomething' and will be called with the respective results
-    funnyStuff: function(processSomething, searchSomething, callback){
-        // do something silly
-        callback(null, 'ciao!');
-    },
-    // this will be called instantly
-    searchSomething: function(callback){
-        // do something with database
-        callback(err, results);
-    },
-    // this will wait 'searchSomething'
-    update: function(searchSomething, callback){
-        // change values inside results and save to db
-        callback(err); // no needs to return values
-    },
-    // this will wait 'searchSomething'
-    processSomething: function(searchSomething, callback){
-        var start = new Date().getTime();
-        // do something slow
-        var elapsedTime = new Date().getTime() - start;
-        callback(err, elapsedTime);
-    }]
-},function(err, data){
+  // this will wait for 'processSomething' and 'searchSomething' and will be called with the respective results
+  funnyStuff: function (processSomething, searchSomething, callback) {
+    // do something silly
+    callback(null, 'ciao!');
+  },
+  // this will be called instantly
+  searchSomething: function (callback) {
+    // do something with database
+    callback(err, results);
+  },
+  // this will wait 'searchSomething'
+  update: function (searchSomething, callback) {
+    // change values inside results and save to db
+    callback(err); // no needs to return values
+  },
+  // this will wait 'searchSomething'
+  processSomething: function (searchSomething, callback) {
+    var start = new Date().getTime();
+    // do something slow
+    var elapsedTime = new Date().getTime() - start;
+    callback(err, elapsedTime);
+  }]
+}, function (err, data) {
 
-    if(err)
-        throw err;
+  if (err) {
+    throw err;
+  }
 
-    console.log(data.searchSomething);  // results
-    console.log(data.update);           // undefined
-    console.log(data.processSomething); // elapsedTime
-    console.log(data.funnyStuff);       // 'ciao!'
+  console.log(data.searchSomething);  // results
+  console.log(data.update);           // undefined
+  console.log(data.processSomething); // elapsedTime
+  console.log(data.funnyStuff);       // 'ciao!'
 }, 1);
 ```
 
 ##Introspection profiling results
 
-Profiling results are pretty good, Function.toString() took up __~2 seconds__ every __1 Million__ of executions.
+Profiling results are pretty good, Function.toString() took up __2~ seconds__ every __1 Million__ of executions.
 
     Lines of code 		time (ms)		Platform
     ---------------------------------------------------------------------------------------------------
