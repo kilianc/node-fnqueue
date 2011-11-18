@@ -77,6 +77,15 @@ new FnQueue({
     console.log(data.funnyStuff);       // 'ciao!'
 }, 1);
 ```
+
+##Introspection profiling results
+
+Profiling results are pretty good, Function.toString() took up __~2 seconds__ every __1 Million__ of executions.
+
+    Lines of code 		time (ms)		Platform
+    ---------------------------------------------------------------------------------------------------
+    800					1808ms			OSX Lion 2.2 GHz Intel Core i7 / nodejs v6.0.1
+
 ## Test
 
 Tests depends on http://vowsjs.org/ then
