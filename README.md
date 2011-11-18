@@ -13,13 +13,22 @@ A powerful utility for function chaining (inspired by [async](https://github.com
 ## Syntax
 
 ```javascript
-new FnQueue(functionsList[, callback, concurrencyLevel]);
+new FnQueue(functionsList[, callback, concurrencyLevel, isStopped]);
 ```
 ##Parameters
 
 1. `functionsList` __(Object)__ a list of Functions. Each function can declare implicit dependencies as arguments and assume you provide a single callback as the last argument.
 2. `callback` __(Function(err, data))__ the complete callback in the conventional form of `function (err, data){ ... }`
 3. `concurrencyLevel` __(Number/String: defaults to 'auto')__ the concurrency level of the chain execution, can be `'auto'` or `N* = { 1, 2, ... }`
+4. `isStopped` __(Boolean: defaults to false)__ if true you must call the start method in order to execute the function list.
+
+##Methods
+
+* __start__: will start the execution, used in combination with `isStopped = true` constructor parameter
+
+##Attributes
+
+* __isVerbose__ _(Boolean)_: will change the instance verbose mode
 
 ##Notes
 
@@ -31,6 +40,8 @@ Each function with a dependency will be called with the result of the dependent 
 The global callback is called once, on the first error or at the end of the execution. A data object will be provided with the indexed result of the functions.
 
 FnQueue magically resolves all dependencies and executes functions in the right order with the provided concurrency level.
+
+##Example
 
 ```javascript
 var FnQueue = require('fnqueue');
