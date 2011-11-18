@@ -78,6 +78,79 @@ vows.describe('FnQueue').addBatch({
       assert.isEmpty(obj);
     }
   },
+  'FnQueue.loadDependencies, given a function queue': {
+    topic: function () {
+      var queue = new FnQueue({
+        fn1: function (fn2, callback) {
+          setTimeout(callback.bind(null, null, 'fn1'), 500);
+        },
+        fn2: function (fn4, callback) {
+          setTimeout(callback.bind(null, null, 'fn2'), 500);
+        },
+        fn3: function (fn1, fn2, fn4, callback) {
+          setTimeout(callback.bind(null, null, undefined), 500);
+        },
+        fn4: function (callback) {
+          setTimeout(callback.bind(null, null, false), 500);
+        }
+      }, null, 1, true);
+      return queue;
+    },
+    'should load dependencies correctly': function (queue) {
+      assert.deepEqual(queue.taskDependencies, {
+        fn1: ['fn2'],
+        fn2: ['fn4'],
+        fn3: ['fn1', 'fn2', 'fn4'],
+        fn4: []
+      });
+    }
+  },
+  'FnQueue.loadDependencies, given a wrong function queue (missing callback)': {
+    topic: function () {
+      var queue = new FnQueue({
+        fn1: function (fn2, callback) {
+          setTimeout(callback.bind(null, null, 'fn1'), 500);
+        },
+        fn2: function (fn4, callback) {
+          setTimeout(callback.bind(null, null, 'fn2'), 500);
+        },
+        fn3: function (fn1, fn2, fn4, callback) {
+          setTimeout(callback.bind(null, null, undefined), 500);
+        },
+        fn4: function () {
+          setTimeout(callback.bind(null, null, false), 500);
+        }
+      }, this.callback, 1, true);
+    },
+    'should call the main callback with an error': function (err, data) {
+      assert.isNotNull(err);
+    },
+    'error should match the "Invalid Function in list..." messgae': function (err, data) {
+      assert.match(err.message, /^Invalid Function in list/);
+    }
+  },
+  'FnQueue.loadDependencies, given a wrong function queue (not a function)': {
+    topic: function () {
+      var queue = new FnQueue({
+        fn1: function (fn2, callback) {
+          setTimeout(callback.bind(null, null, 'fn1'), 500);
+        },
+        fn2: function (fn4, callback) {
+          setTimeout(callback.bind(null, null, 'fn2'), 500);
+        },
+        fn3: function (fn1, fn2, fn4, callback) {
+          setTimeout(callback.bind(null, null, undefined), 500);
+        },
+        fn4: 'ciao'
+      }, this.callback, 1, true);
+    },
+    'should call the main callback with an error': function (err, data) {
+      assert.isNotNull(err);
+    },
+    'error should match the "Invalid Function in list..." messgae': function (err, data) {
+      assert.match(err.message, /^Invalid Function in list/);
+    }
+  },
   'FnQueue with an example queue of functions': {
     topic: function () {
       new FnQueue({
