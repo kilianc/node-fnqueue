@@ -106,7 +106,7 @@ Tests depends on http://vowsjs.org/ then
     npm install
     npm test
 
-![tests](http://cl.ly/1R2q3h0G2c3a41303R1I/fnqueue_test_v2.png)
+![tests](http://f.cl.ly/items/3q2W11392o2G2r0d0413/fnqueue_test_v2.0.1.png)
 
 ## License
 
