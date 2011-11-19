@@ -183,6 +183,54 @@ vows.describe('FnQueue').addBatch({
       });
     }
   },
+  'FnQueue with a wrong concurrency level (< 0)': {
+    topic: function () {
+      new FnQueue({
+        fn1: function (callback) {
+          setTimeout(callback.bind(null, null, 'fn1'), 500);
+        },
+        fn2: function (callback) {
+          setTimeout(callback.bind(null, null, 'fn2'), 500);
+        },
+        fn3: function (callback) {
+          setTimeout(callback.bind(null, null, undefined), 500);
+        },
+        fn4: function (callback) {
+          setTimeout(callback.bind(null, null, false), 500);
+        }
+      }, this.callback, -5);
+    },
+    'should call the main callback with an error': function (err, data) {
+      assert.isNotNull(err);
+    },
+    'error should match the "Invalid Function in list..." messgae': function (err, data) {
+      assert.match(err.message, /^Invalid concurrecyLevel/);
+    }
+  },
+  'FnQueue with a wrong concurrency level (!== \'auto\')': {
+    topic: function () {
+      new FnQueue({
+        fn1: function (callback) {
+          setTimeout(callback.bind(null, null, 'fn1'), 500);
+        },
+        fn2: function (callback) {
+          setTimeout(callback.bind(null, null, 'fn2'), 500);
+        },
+        fn3: function (callback) {
+          setTimeout(callback.bind(null, null, undefined), 500);
+        },
+        fn4: function (callback) {
+          setTimeout(callback.bind(null, null, false), 500);
+        }
+      }, this.callback, 'wrong!');
+    },
+    'should call the main callback with an error': function (err, data) {
+      assert.isNotNull(err);
+    },
+    'error should match the "Invalid Function in list..." messgae': function (err, data) {
+      assert.match(err.message, /^Invalid concurrecyLevel/);
+    }
+  },
   'FnQueue with some error throwing function': {
     topic: function () {
       new FnQueue({
