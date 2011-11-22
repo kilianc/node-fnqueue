@@ -17,27 +17,6 @@ vows.describe('FnQueue').addBatch({
     }
   }
 }).addBatch({
-  'FnQueue.getFunctionArguments should success': {
-    'without spaces': function () {
-      assert.deepEqual(FnQueue.prototype.getFunctionArguments(function (foo,bar,callback) {}), ['foo', 'bar', 'callback']);
-    },
-    'with spaces': function () {
-      assert.deepEqual(FnQueue.prototype.getFunctionArguments(function ( foo , bar , callback ) { }), ['foo', 'bar', 'callback']);
-    },
-    'with newline': function () {
-      assert.deepEqual(FnQueue.prototype.getFunctionArguments(function (
-        foo,
-        bar,
-        callback
-      ) {//foo bar
-        //foo bar
-        var a = 5;
-        for(var b = 0; b < 1000; b ++) { }
-        if (a == 5) { }
-      }), ['foo', 'bar', 'callback']);
-    }
-  }
-}).addBatch({
   'Given an object of results': {
     topic: {
       results: {

@@ -35,7 +35,7 @@ new FnQueue(functionsList[, callback, concurrencyLevel, isStopped]);
 FnQueue runs a list of functions, each passing their results to the dependent function in the list. However, if any of the functions pass an error to the callback, the next function is not executed and the main callback is immediately called with the error.
 
 Each dependency/argument must be named with the label of the dependent function in the `functionsList` (the first constructor argument).
-Each function with a dependency will be called with the result of the dependent function as expected. __(YES this is a fucking cool introspection!)__
+Each function with a dependency will be called with the result of the dependent function as expected. __(Introspection by [introspect](https://github.com/kilianc/introspect))__
 
 The global callback is called once, on the first error or at the end of the execution. A data object will be provided with the indexed result of the functions.
 
@@ -90,14 +90,6 @@ new FnQueue({
 }, 1);
 ```
 
-##Introspection profiling results
-
-Profiling results are pretty good, Function.toString() took up __2~ seconds__ every __1 Million__ of executions.
-
-    Lines of code 		time (ms)		Platform
-    ---------------------------------------------------------------------------------------------------
-    800					1808ms			OSX Lion 2.2 GHz Intel Core i7 / nodejs v6.0.1
-
 ## Test
 
 Tests depends on http://vowsjs.org/ then
@@ -106,7 +98,7 @@ Tests depends on http://vowsjs.org/ then
     npm install
     npm test
 
-![tests](http://f.cl.ly/items/3q2W11392o2G2r0d0413/fnqueue_test_v2.0.1.png)
+![tests](http://f.cl.ly/items/03432M3A0l0r3M142B2w/fnqueue_test_v2.0.2.png)
 
 ## License
 

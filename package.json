@@ -15,6 +15,9 @@
     "type": "git",
     "url": "http://github.com/kilianc/node-fnqueue.git"
   },
+  "dependencies": {
+    "introspect": "0.0.x"
+  },
   "devDependencies": {
     "vows": "0.5.x >= 0.5.13"
   }
