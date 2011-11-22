@@ -1,21 +1,21 @@
 {
-	"author": "Kilian Ciuffolo <me@nailik.org> (http://nailik.org)",
-	"name": "fnqueue",
-	"main" : "./lib/fnqueue.js",
-	"description": "A powerful utility for function chaining",
-	"keywords": ["async", "queue", "promise", "flow", "parallel", "chain"],
-	"version": "2.0.0",
-	"engines": {
-		"node": ">= v0.4.7"
-	},
-	"scripts": {
-		"test": "vows test/*-test.js --spec"
-	},
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/kilianc/node-fnqueue.git"
-	},
-	"devDependencies": {
-		"vows": "0.5.x >= 0.5.13"
-	}
+  "author": "Kilian Ciuffolo <me@nailik.org> (http://nailik.org)",
+  "name": "fnqueue",
+  "main" : "./lib/fnqueue.js",
+  "description": "A powerful utility for function chaining",
+  "keywords": ["async", "queue", "promise", "flow", "parallel", "chain"],
+  "version": "2.0.0",
+  "engines": {
+    "node": ">= v0.4.7"
+  },
+  "scripts": {
+    "test": "vows test/*-test.js --spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/kilianc/node-fnqueue.git"
+  },
+  "devDependencies": {
+    "vows": "0.5.x >= 0.5.13"
+  }
 }
