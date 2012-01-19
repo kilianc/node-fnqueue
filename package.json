@@ -4,7 +4,7 @@
   "main" : "./lib/fnqueue.js",
   "description": "A powerful utility for function chaining",
   "keywords": ["async", "queue", "promise", "flow", "parallel", "chain"],
-  "version": "2.0.1",
+  "version": "2.0.2",
   "engines": {
     "node": ">= v0.4.7"
   },
