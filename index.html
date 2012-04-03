@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>fnqueue by kilianc</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>fnqueue</h1>
+        <p>A nodejs powerful utility for function chaining</p>
+        <p class="view"><a href="https://github.com/kilianc/node-fnqueue">View the Project on GitHub <small>kilianc/node-fnqueue</small></a></p>
+        <ul>
+          <li><a href="https://github.com/kilianc/node-fnqueue/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kilianc/node-fnqueue/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kilianc/node-fnqueue">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>fnqueue <img src="http://dl.dropbox.com/u/2208502/maintained.png" alt="project status">
+</h1>
+
+<p>A nodejs powerful utility for function chaining (inspired by <a href="https://github.com/caolan/async">async</a>).</p>
+
+<h2>Engine</h2>
+
+<ul>
+<li>nodejs v0.4.12+ (tested with v0.6.x)</li>
+</ul><h2>Installation with npm</h2>
+
+<pre><code>$ npm install fnqueue
+</code></pre>
+
+<h2>Syntax</h2>
+
+<div class="highlight">
+<pre><span class="k">new</span> <span class="nx">FnQueue</span><span class="p">(</span><span class="nx">functionsList</span><span class="p">[,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">concurrencyLevel</span><span class="p">,</span> <span class="nx">isStopped</span><span class="p">]);</span>
+</pre>
+</div>
+
+
+<h2>Parameters</h2>
+
+<ol>
+<li>
+<code>functionsList</code> <strong>(Object)</strong> a list of Functions. Each function can declare implicit dependencies as arguments and assume you provide a single callback as the last argument.</li>
+<li>
+<code>callback</code> <strong>(Function(err, data))</strong> the complete callback in the conventional form of <code>function (err, data) { ... }</code>
+</li>
+<li>
+<code>concurrencyLevel</code> <strong>(Number/String: defaults to 'auto')</strong> the concurrency level of the chain execution, can be <code>'auto'</code> or <code>N* = { 1, 2, ... }</code>
+</li>
+<li>
+<code>isStopped</code> <strong>(Boolean: defaults to false)</strong> if true you must call the start method in order to execute the function list.</li>
+</ol><h2>Methods</h2>
+
+<ul>
+<li>
+<strong>start</strong>: will start the execution, used in combination with <code>isStopped = true</code> constructor parameter</li>
+</ul><h2>Attributes</h2>
+
+<ul>
+<li>
+<strong>isVerbose</strong> <em>(Boolean)</em>: will change the instance verbose mode</li>
+</ul><h2>Notes</h2>
+
+<p>FnQueue runs a list of functions, each passing their results to the dependent function in the list. However, if any of the functions pass an error to the callback, the next function is not executed and the main callback is immediately called with the error.</p>
+
+<p>Each dependency/argument must be named with the label of the dependent function in the <code>functionsList</code> (the first constructor argument).
+Each function with a dependency will be called with the result of the dependent function as expected. <strong>(Introspection by <a href="https://github.com/kilianc/introspect">introspect</a>)</strong></p>
+
+<p>The global callback is called once, on the first error or at the end of the execution. A data object will be provided with the indexed result of the functions.</p>
+
+<p>FnQueue magically resolves all dependencies and executes functions in the right order with the provided concurrency level.</p>
+
+<h2>Example</h2>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">FnQueue</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fnqueue'</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>or for a verbose mode:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">FnQueue</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fnqueue'</span><span class="p">).</span><span class="nx">verbose</span><span class="p">();</span>
+</pre>
+</div>
+
+
+<p>Example:</p>
+
+<div class="highlight">
+<pre><span class="k">new</span> <span class="nx">FnQueue</span><span class="p">({</span>
+  <span class="c1">// this will wait for 'processSomething' and 'searchSomething' and will be called with the respective results</span>
+  <span class="nx">funnyStuff</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">processSomething</span><span class="p">,</span> <span class="nx">searchSomething</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something silly</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s1">'ciao!'</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="c1">// this will be called instantly</span>
+  <span class="nx">searchSomething</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something with database</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="c1">// this will wait 'searchSomething'</span>
+  <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">searchSomething</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// change values inside results and save to db</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="c1">// no needs to return values</span>
+  <span class="p">},</span>
+  <span class="c1">// this will wait 'searchSomething'</span>
+  <span class="nx">processSomething</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">searchSomething</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">();</span>
+    <span class="c1">// do something slow</span>
+    <span class="kd">var</span> <span class="nx">elapsedTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">;</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">elapsedTime</span><span class="p">);</span>
+  <span class="p">}]</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">searchSomething</span><span class="p">);</span>  <span class="c1">// results</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">update</span><span class="p">);</span>           <span class="c1">// undefined</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">processSomething</span><span class="p">);</span> <span class="c1">// elapsedTime</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">funnyStuff</span><span class="p">);</span>       <span class="c1">// 'ciao!'</span>
+<span class="p">},</span> <span class="mi">1</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<h2>Test</h2>
+
+<p>Tests depends on <a href="http://vowsjs.org/">http://vowsjs.org/</a> then</p>
+
+<pre><code>npm install -g vows
+npm install
+npm test
+</code></pre>
+
+<p><img src="http://f.cl.ly/items/03432M3A0l0r3M142B2w/fnqueue_test_v2.0.2.png" alt="tests"></p>
+
+<h2>License</h2>
+
+<p><em>This software is released under the MIT license cited below</em>.</p>
+
+<pre><code>Copyright (c) 2010 Kilian Ciuffolo, me@nailik.org. All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the 'Software'), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kilianc">kilianc</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
