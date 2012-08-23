@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/kilianc/node-fnqueue.png)](http://travis-ci.org/kilianc/node-fnqueue)
 # node-fnqueue ![project status](http://dl.dropbox.com/u/2208502/maintained.png)
 
 A powerful utility for function chaining (inspired by [async](https://github.com/caolan/async)).
